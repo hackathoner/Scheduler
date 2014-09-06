@@ -17,3 +17,7 @@
 .newclass{
 	margin-top:5px;
 }
+#menuButton:hover {
+
+background-color: #3498db;
+}

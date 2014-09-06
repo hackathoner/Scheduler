@@ -1,0 +1,19 @@
+.plus_sign{
+	padding:0px;
+	margin:0px;
+	height:20px;
+	width:20px;
+	clear:both;
+}
+.radio_form{
+	padding:5px;
+	border:solid #cccccc 1px;
+	border-top:none;
+}
+.noschool{
+	margin-top:5px;
+	border-radius:3px;
+}
+.newclass{
+	margin-top:5px;
+}

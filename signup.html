@@ -4,6 +4,9 @@
 <link href="http://maxcdn.bootstrapcdn.com/bootswatch/3.2.0/yeti/bootstrap.min.css" rel="stylesheet">
 <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.11.1.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<script src="https://cdn.firebase.com/js/client/1.0.21/firebase.js"></script>
+<script src="https://cdn.firebase.com/js/simple-login/1.6.3/firebase-simple-login.js"></script>
+
 <style>
 
 #menuButton:hover {
@@ -54,15 +57,97 @@ background-color: #3498db;
       <input type="password" class="form-control" id="password2"> 
 
       <div style="margin-top:15px">
-      <a href="index.html" class="btn btn-default col-md-8" style="margin-right:14px">Create Account</a>
+      <input type="submit" id="submit" onClick="createAccount()" value="Create Account"class="btn btn-default col-md-8" style="margin-right:14px">
       <a href="login.html" class="btn btn-default">Log-in</a>
       </div>
-
+      <div style="margin-top:15px">
+      <input type="submit" id="submit" onClick="createFbAccount()" value="Sign up with Facebook"class="btn btn-default col-md-12" style="margin-right:14px">
+      </div>
     </div>
     </div>
   </div>
   </div>
 </div>
 </body>
+<script>
+
+        var myRef = new Firebase("https://swag.firebaseio.com");
+        var authClient = new FirebaseSimpleLogin(myRef, function(error, user) {
+          if (error) {
+            // an error occurred while attempting login
+            console.log(error);
+          } else if (user) {
+            // user authenticated with Firebase
+            console.log("User ID: " + user.uid + ", Provider: " + user.provider);
+            window.location="index.html";
+          } else {
+            // user is logged out
+          }
+        });
+
+        function createAccount()
+        {
+      
+
+        var name = $("#name").val();
+        var email = $("#email").val();
+        var p1 = $("#password").val();
+        var p2 = $("#password2").val();  
+
+        if(p1 == p2)
+        {
+          console.log('hello');
+          authClient.createUser(email, p1, function(error, user) {
+          if (error === null) {
+            console.log("User created successfully:", user);
+            var ref = new Firebase("https://swag.firebaseio.com/users");
+            ref.child(email.replace('.', '')).set({
+              Name: "" + name,
+              Email: "" + email
+            })
+
+          } else {
+            alert("Error. You have already signed up! Please use a different email");
+          }
+        });
+        }
+        else
+        {
+          alert("Your Passwords Do Not Match");
+        }
+      }
+        function createFbAccount()
+        {
+
+          var myRef = new Firebase("https://swag.firebaseio.com");
+          var authClient = new FirebaseSimpleLogin(myRef, function(error, user) {
+            if (error) {
+              // an error occurred while attempting login
+              alert("An Error has Ocurred, Please Try Again");
+              console.log(error);
+            } else if (user) {
+              // user authenticated with Firebase
+              console.log("User ID: " + user.uid + ", Provider: " + user.provider);
+              var email = user.thirdPartyUserData.email;
+              var name = user.displayName;
+              var ref = new Firebase("https://swag.firebaseio.com/users");
+              ref.child(email.replace('.', '')).set({
+                Name: "" + name,
+                Email: "" + email
+              })
+              window.location="index.html";
+            } else {
+              // user is logged out
+            }
+          });
+          
+
+          authClient.login('facebook', {
+            rememberMe: true,
+            scope: 'email'
+          });
+        }
+      
+</script>
 
 </html>

@@ -6,6 +6,9 @@
 <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.11.1.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 <script src="master.js"></script>
+<script src="https://cdn.firebase.com/js/client/1.0.21/firebase.js"></script>
+<script src="https://cdn.firebase.com/js/simple-login/1.6.3/firebase-simple-login.js"></script>
+
 <style>
 
 #menuButton:hover {
@@ -33,6 +36,7 @@ background-color: #3498db;
       <li class="active"><a href="addschedule.html">+ Add Schedule</a></li>
       <div class="pull-right" style="float:left;">
       <li class="pull-right"><a href="login.html" class="btn btn-primary" id="menubutton" style=" margin-top:5px;">Login</a></li>
+      <li class="pull-right"><a href="login.html" onClick="logout()"class="btn btn-primary" id="menubutton" style="margin-top:5px">Logout</a></li>
       <li class="pull-right"><a href="#" class="btn btn-primary" id="menubutton" style="margin-top:5px">Sign Up</a></li>
       </div>
     </ul>   
@@ -66,5 +70,25 @@ background-color: #3498db;
 </form>
 </div>
 </body>
+<script>
+
+        function logout()
+        {
+          authClient.logout();
+        }
+        var myRef = new Firebase("https://swag.firebaseio.com");
+          var authClient = new FirebaseSimpleLogin(myRef, function(error, user) {
+            if (error) {
+              // an error occurred while attempting login
+              alert("An Error has Ocurred, Please Try Again");
+              console.log(error);
+            } else if (user) {
+              // user authenticated with Firebase
+              console.log("User ID: " + user.uid + ", Provider: " + user.provider);
+            } else {
+              // user is logged out
+            }
+          });
+</script>
 
 </html>
